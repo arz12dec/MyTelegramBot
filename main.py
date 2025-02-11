@@ -1,11 +1,11 @@
-from replit import web
-from keep_alive import keep_alive
-
+from flask import Flask, request
 import telebot
 
 # جایگزین کن با توکن خودت
 TOKEN = "7697675014:AAEbeOmjJ83JQcw47Ydzgveqh2ecp3GtUnA"
 bot = telebot.TeleBot(TOKEN)
+
+app = Flask(name)
 
 # لیست پیام‌ها و پاسخ‌های خودکار
 auto_replies = {
@@ -39,14 +39,21 @@ auto_replies = {
 ممنون که همراه ما هستید❤️"""
 }
 
-# این تابع هر پیامی که دریافت بشه رو بررسی می‌کنه
+# دریافت پیام‌ها و ارسال پاسخ
 @bot.message_handler(func=lambda message: True)
 def auto_reply(message):
-    text = message.text.strip()  # گرفتن متن پیام
-    if text in auto_replies:  # اگه تو لیست پاسخ‌ها باشه
-        bot.reply_to(message, auto_replies[text],parse_mode="Markdown")  # پاسخ بده
+    text = message.text.strip()
+    if text in auto_replies:
+        bot.reply_to(message, auto_replies[text], parse_mode="Markdown")
 
-print("ربات فعال شد...")
+# مسیر وب‌هوک برای دریافت پیام‌ها از تلگرام
+@app.route('/webhook', methods=['POST'])
+def webhook():
+    json_str = request.get_data().decode('UTF-8')
+    update = telebot.types.Update.de_json(json_str)
+    bot.process_new_updates([update])
+    return "OK", 200  # تلگرام باید این پاسخ رو بگیره
 
-keep_alive()
-bot.polling()
+# اجرای سرور Flask
+if name == "main":
+    app.run(host="0.0.0.0", port=5000)
