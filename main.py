@@ -47,4 +47,6 @@ def auto_reply(message):
         bot.reply_to(message, auto_replies[text],parse_mode="Markdown")  # پاسخ بده
 
 print("ربات فعال شد...")
+
+keep_alive()
 bot.polling()
