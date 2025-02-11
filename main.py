@@ -5,7 +5,7 @@ import os
 TOKEN = "7697675014:AAEbeOmjJ83JQcw47Ydzgveqh2ecp3GtUnA"
 bot = telebot.TeleBot(TOKEN)
 
-app = Flask(name)
+app = Flask(__name__)
 
 # لیست پیام‌ها و پاسخ‌های خودکار
 auto_replies = {
@@ -56,5 +56,5 @@ def auto_reply(message):
     if text in auto_replies:
         bot.reply_to(message, auto_replies[text], parse_mode="Markdown")
 
-if name == "main":
+if __name__ == "__main__":
     app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))
