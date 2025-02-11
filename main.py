@@ -55,5 +55,5 @@ def webhook():
     return "OK", 200  # تلگرام باید این پاسخ رو بگیره
 
 # اجرای سرور Flask
-if name == "main":
+if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000)
