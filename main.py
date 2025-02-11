@@ -1,11 +1,11 @@
 from flask import Flask, request
 import telebot
+import os
 
-# جایگزین کن با توکن خودت
 TOKEN = "7697675014:AAEbeOmjJ83JQcw47Ydzgveqh2ecp3GtUnA"
 bot = telebot.TeleBot(TOKEN)
 
-app = Flask(__name__)
+app = Flask(name)
 
 # لیست پیام‌ها و پاسخ‌های خودکار
 auto_replies = {
@@ -39,21 +39,22 @@ auto_replies = {
 ممنون که همراه ما هستید❤️"""
 }
 
-# دریافت پیام‌ها و ارسال پاسخ
+@app.route("/", methods=["GET"])
+def home():
+    return "ربات فعال است! ✅"
+
+@app.route("/webhook", methods=["POST"])
+def webhook():
+    update = request.get_json()
+    if update:
+        bot.process_new_updates([telebot.types.Update.de_json(update)])
+    return "OK", 200
+
 @bot.message_handler(func=lambda message: True)
 def auto_reply(message):
     text = message.text.strip()
     if text in auto_replies:
         bot.reply_to(message, auto_replies[text], parse_mode="Markdown")
 
-# مسیر وب‌هوک برای دریافت پیام‌ها از تلگرام
-@app.route('/webhook', methods=['POST'])
-def webhook():
-    json_str = request.get_data().decode('UTF-8')
-    update = telebot.types.Update.de_json(json_str)
-    bot.process_new_updates([update])
-    return "OK", 200  # تلگرام باید این پاسخ رو بگیره
-
-# اجرای سرور Flask
-if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5000)
+if name == "main":
+    app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))
