@@ -5,7 +5,7 @@ import telebot
 TOKEN = "7697675014:AAEbeOmjJ83JQcw47Ydzgveqh2ecp3GtUnA"
 bot = telebot.TeleBot(TOKEN)
 
-app = Flask(name)
+app = Flask(__name__)
 
 # لیست پیام‌ها و پاسخ‌های خودکار
 auto_replies = {
